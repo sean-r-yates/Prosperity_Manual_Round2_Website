@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Signal Outpost Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Space+Grotesk:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body class="admin-body">
+    <div class="background-glow background-glow-a"></div>
+    <div class="background-glow background-glow-b"></div>
+
+    <div class="page-shell admin-shell">
+      <header class="topbar">
+        <div class="brand-wrap">
+          <div class="brand-mark">SO</div>
+          <div>
+            <p class="eyebrow">Private Admin Surface</p>
+            <h1 class="brand-name">Signal Outpost Admin</h1>
+          </div>
+        </div>
+        <div class="topbar-actions">
+          <a class="ghost-link" href="/">Back to Tester</a>
+        </div>
+      </header>
+
+      <main class="page-grid admin-grid">
+        <section class="panel auth-panel" id="admin-auth-panel">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Protected Access</p>
+              <h2 class="section-title">Enter the admin password to view real-user analytics and export the CSV.</h2>
+            </div>
+          </div>
+
+          <form id="admin-login-form" class="admin-login-form">
+            <label class="allocation-field">
+              <span class="field-label">Admin Password</span>
+              <div class="field-input-wrap">
+                <input id="admin-password" type="password" autocomplete="current-password" />
+              </div>
+            </label>
+            <div class="form-actions">
+              <button class="primary-button" type="submit">Open Admin View</button>
+              <p class="form-message" id="admin-message"></p>
+            </div>
+          </form>
+        </section>
+
+        <section class="panel hidden" id="admin-dashboard">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Real User Analytics</p>
+              <h2 class="section-title">Anonymous real-user behaviour and the current mixed market snapshot.</h2>
+            </div>
+            <div class="topbar-actions">
+              <a class="secondary-button" id="download-link" href="/api/admin-export">Download CSV</a>
+              <button class="ghost-link button-reset" id="logout-button" type="button">Log Out</button>
+            </div>
+          </div>
+
+          <div class="results-grid">
+            <article class="result-card glow-card">
+              <span class="result-label">Total Real Users</span>
+              <strong id="admin-total-users">--</strong>
+            </article>
+            <article class="result-card">
+              <span class="result-label">Total Real Attempts</span>
+              <strong id="admin-total-attempts">--</strong>
+            </article>
+            <article class="result-card">
+              <span class="result-label">Mixed Snapshot Size</span>
+              <strong id="admin-mixed-size">--</strong>
+            </article>
+            <article class="result-card">
+              <span class="result-label">Last Mixed Refresh</span>
+              <strong id="admin-mixed-time">--</strong>
+            </article>
+          </div>
+
+          <div class="admin-section-grid">
+            <article class="chart-card">
+              <div class="chart-header">
+                <div>
+                  <span class="chart-label">Real User Averages</span>
+                  <strong id="real-averages-title">Field distribution by submitted attempts</strong>
+                </div>
+              </div>
+              <div class="stat-line" id="real-averages-line">--</div>
+            </article>
+
+            <article class="chart-card">
+              <div class="chart-header">
+                <div>
+                  <span class="chart-label">Mixed Snapshot Averages</span>
+                  <strong id="mixed-averages-title">Current fake + sampled real blend</strong>
+                </div>
+              </div>
+              <div class="stat-line" id="mixed-averages-line">--</div>
+            </article>
+          </div>
+
+          <div class="admin-section-grid">
+            <article class="chart-card">
+              <div class="chart-header">
+                <div>
+                  <span class="chart-label">Real Data Histograms</span>
+                  <strong>Research, Scale, and Speed</strong>
+                </div>
+              </div>
+              <div class="mini-chart-grid">
+                <div class="mini-chart" id="real-research-chart"></div>
+                <div class="mini-chart" id="real-scale-chart"></div>
+                <div class="mini-chart" id="real-speed-chart"></div>
+              </div>
+            </article>
+
+            <article class="chart-card">
+              <div class="chart-header">
+                <div>
+                  <span class="chart-label">Mixed Market Histograms</span>
+                  <strong>Fake participants plus sampled real data</strong>
+                </div>
+              </div>
+              <div class="mini-chart-grid">
+                <div class="mini-chart" id="mixed-research-chart"></div>
+                <div class="mini-chart" id="mixed-scale-chart"></div>
+                <div class="mini-chart" id="mixed-speed-chart"></div>
+              </div>
+            </article>
+          </div>
+
+          <div class="table-wrap">
+            <table class="attempt-table">
+              <thead>
+                <tr>
+                  <th>Participant</th>
+                  <th>Attempt</th>
+                  <th>Split</th>
+                  <th>PnL</th>
+                  <th>Expected</th>
+                  <th>Submitted</th>
+                </tr>
+              </thead>
+              <tbody id="admin-attempts-body">
+                <tr>
+                  <td colspan="6" class="empty-table">No attempt data yet.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script type="module" src="/admin.js"></script>
+  </body>
+</html>
+

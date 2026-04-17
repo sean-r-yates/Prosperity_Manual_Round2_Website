@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Signal Outpost</title>
+    <meta
+      name="description"
+      content="Signal Outpost is a free open manual strategy tester for anonymous market-making allocation experiments."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Space+Grotesk:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="background-glow background-glow-a"></div>
+    <div class="background-glow background-glow-b"></div>
+
+    <div class="page-shell">
+      <header class="topbar">
+        <div class="brand-wrap">
+          <div class="brand-mark">SO</div>
+          <div>
+            <p class="eyebrow">Free Open Strategy Tester</p>
+            <h1 class="brand-name">Signal Outpost</h1>
+          </div>
+        </div>
+
+        <div class="topbar-actions">
+          <div class="top-pill">Single-player sandbox with a simulated field</div>
+          <a class="ghost-link" href="/admin">Admin</a>
+        </div>
+      </header>
+
+      <main class="page-grid">
+        <section class="panel hero-panel">
+          <div class="hero-copy">
+            <p class="eyebrow">Manual Strategy Tester</p>
+            <h2 class="hero-title">Experiment with Research, Scale, and Speed without exposing anyone else’s book.</h2>
+            <p class="hero-text">
+              Use an anonymous participant ID, test manual allocations, and see how your own score changes as a
+              simulated field drifts over time. Real user submissions are logged privately. The visible experience stays
+              individual.
+            </p>
+            <div class="hero-badges">
+              <span class="inline-badge">Exact challenge math</span>
+              <span class="inline-badge">20 attempts + optional 5</span>
+              <span class="inline-badge">20 minute field refresh on visit</span>
+            </div>
+          </div>
+
+          <div class="hero-aside">
+            <div class="metric-card">
+              <span class="metric-label">Active Field</span>
+              <strong class="metric-value" id="active-field-count">--</strong>
+              <span class="metric-note">Simulated participants in the current snapshot</span>
+            </div>
+
+            <div class="metric-card">
+              <span class="metric-label">Participant ID</span>
+              <strong class="metric-value metric-id" id="participant-id">--</strong>
+              <span class="metric-note" id="participant-expiry">ID refreshes after 3 days</span>
+            </div>
+
+            <div class="metric-card">
+              <span class="metric-label">Attempts</span>
+              <strong class="metric-value" id="attempt-counter">--</strong>
+              <span class="metric-note" id="attempt-note">Tracked privately per browser</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel form-panel" id="invest-panel">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Your Investment</p>
+              <h2 class="section-title">Allocate the 50,000 XIREC budget across the three pillars.</h2>
+            </div>
+            <button class="secondary-button hidden" id="extend-button" type="button">Unlock 5 More Attempts</button>
+          </div>
+
+          <form id="allocation-form" novalidate>
+            <div class="field-grid">
+              <label class="allocation-field">
+                <span class="field-label">Research</span>
+                <div class="field-input-wrap">
+                  <input id="research-input" inputmode="numeric" min="1" max="100" step="1" type="number" />
+                  <span class="field-unit">%</span>
+                </div>
+                <div class="field-amount" id="research-amount">--</div>
+              </label>
+
+              <label class="allocation-field">
+                <span class="field-label">Scale</span>
+                <div class="field-input-wrap">
+                  <input id="scale-input" inputmode="numeric" min="1" max="100" step="1" type="number" />
+                  <span class="field-unit">%</span>
+                </div>
+                <div class="field-amount" id="scale-amount">--</div>
+              </label>
+
+              <label class="allocation-field accent-field">
+                <span class="field-label">Speed</span>
+                <div class="field-input-wrap">
+                  <input id="speed-input" inputmode="numeric" min="1" max="100" step="1" type="number" />
+                  <span class="field-unit">%</span>
+                </div>
+                <div class="field-amount" id="speed-amount">--</div>
+              </label>
+            </div>
+
+            <div class="forecast-grid">
+              <article class="forecast-card">
+                <span class="forecast-label">Research Forecast</span>
+                <strong id="research-forecast">--</strong>
+              </article>
+              <article class="forecast-card">
+                <span class="forecast-label">Scale Forecast</span>
+                <strong id="scale-forecast">--</strong>
+              </article>
+              <article class="forecast-card">
+                <span class="forecast-label">Budget Used</span>
+                <strong id="budget-used-label">0%</strong>
+              </article>
+              <article class="forecast-card">
+                <span class="forecast-label">Attempts Left</span>
+                <strong id="attempts-left-label">--</strong>
+              </article>
+            </div>
+
+            <div class="budget-card">
+              <div class="budget-row">
+                <div>
+                  <p class="budget-title">Spending Budget</p>
+                  <strong class="budget-number" id="budget-used-number">0 / 50,000</strong>
+                </div>
+                <div class="budget-align-right">
+                  <p class="budget-title">Budget Used</p>
+                  <strong class="budget-number" id="budget-used-percent">0%</strong>
+                </div>
+              </div>
+
+              <div class="budget-bar">
+                <div class="budget-fill" id="budget-fill"></div>
+              </div>
+
+              <p class="helper-text" id="budget-helper">
+                Fields accept whole numbers only. Each pillar must be at least 1%. Unused budget stays unused.
+              </p>
+            </div>
+
+            <div class="form-actions">
+              <button class="primary-button" id="submit-button" type="submit">Run Simulation</button>
+              <p class="form-message" id="form-message"></p>
+            </div>
+          </form>
+        </section>
+
+        <section class="panel results-panel" id="results-panel">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Private Results</p>
+              <h2 class="section-title">Only your result is shown. The field underneath is simulated and private.</h2>
+            </div>
+          </div>
+
+          <div class="results-grid">
+            <article class="result-card glow-card">
+              <span class="result-label">Current PnL</span>
+              <strong id="result-pnl">--</strong>
+              <span class="result-note" id="result-rank">Submit an attempt to score against the current field.</span>
+            </article>
+
+            <article class="result-card">
+              <span class="result-label">Expected Return</span>
+              <strong id="result-expected">--</strong>
+              <span class="result-note" id="result-range">Future field movement estimate</span>
+            </article>
+
+            <article class="result-card">
+              <span class="result-label">Speed Percentile</span>
+              <strong id="result-percentile">--</strong>
+              <span class="result-note" id="result-multiplier">Hit-rate multiplier appears after submit</span>
+            </article>
+
+            <article class="result-card">
+              <span class="result-label">Field Snapshot</span>
+              <strong id="result-field">--</strong>
+              <span class="result-note" id="result-refresh">Refreshes on visit after 20 minutes</span>
+            </article>
+          </div>
+
+          <div class="scenario-grid">
+            <article class="scenario-card bullish">
+              <span class="scenario-label">Bullish</span>
+              <strong id="scenario-bullish">--</strong>
+            </article>
+            <article class="scenario-card base">
+              <span class="scenario-label">Base</span>
+              <strong id="scenario-base">--</strong>
+            </article>
+            <article class="scenario-card adverse">
+              <span class="scenario-label">Adverse</span>
+              <strong id="scenario-adverse">--</strong>
+            </article>
+          </div>
+        </section>
+
+        <section class="panel history-panel">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Attempt History</p>
+              <h2 class="section-title">Every real submission is logged. Your graph only shows your own PnL.</h2>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-header">
+              <div>
+                <span class="chart-label">PnL Over Attempts</span>
+                <strong id="history-title">No attempts yet</strong>
+              </div>
+              <span class="chart-meta" id="history-meta">Submit your first simulation to start the series.</span>
+            </div>
+            <div class="chart-wrap" id="history-chart-wrap"></div>
+          </div>
+
+          <div class="table-wrap">
+            <table class="attempt-table">
+              <thead>
+                <tr>
+                  <th>Attempt</th>
+                  <th>Split</th>
+                  <th>PnL</th>
+                  <th>Expected</th>
+                  <th>Percentile</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="history-table-body">
+                <tr>
+                  <td colspan="6" class="empty-table">No attempts logged yet.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <p>
+          Signal Outpost is an unofficial sandbox inspired by a manual trading challenge format. It is not the original
+          challenge environment, and the live field is a simulated blend of fake market behaviour plus real anonymous
+          submissions.
+        </p>
+      </footer>
+    </div>
+
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>
+
