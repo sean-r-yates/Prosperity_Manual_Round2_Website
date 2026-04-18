@@ -23,7 +23,6 @@ const elements = {
   allocationForm: requireElement("allocation-form"),
   attemptCounter: requireElement("attempt-counter"),
   attemptNote: requireElement("attempt-note"),
-  attemptsLeftLabel: requireElement("attempts-left-label"),
   budgetFill: requireElement("budget-fill"),
   budgetHelper: requireElement("budget-helper"),
   budgetUsedLabel: requireElement("budget-used-label"),
@@ -108,6 +107,38 @@ function formatDate(value) {
     dateStyle: "medium",
     timeStyle: "short",
   }).format(new Date(value));
+}
+
+function formatOrdinal(value) {
+  if (!Number.isFinite(Number(value))) {
+    return "--";
+  }
+
+  const numeric = Math.round(Number(value));
+  const mod100 = numeric % 100;
+
+  if (mod100 >= 11 && mod100 <= 13) {
+    return `${numeric}th`;
+  }
+
+  switch (numeric % 10) {
+    case 1:
+      return `${numeric}st`;
+    case 2:
+      return `${numeric}nd`;
+    case 3:
+      return `${numeric}rd`;
+    default:
+      return `${numeric}th`;
+  }
+}
+
+function formatPercentile(value) {
+  if (!Number.isFinite(Number(value))) {
+    return "--";
+  }
+
+  return `${formatOrdinal(Number(value))}`;
 }
 
 function timeUntilExpiry(isoString) {
@@ -264,12 +295,10 @@ function renderIdentity() {
 
   if (!participant) {
     elements.attemptCounter.textContent = "--";
-    elements.attemptsLeftLabel.textContent = "Available";
     return;
   }
 
   elements.attemptCounter.textContent = formatInteger(participant.attemptCount);
-  elements.attemptsLeftLabel.textContent = participant.canSubmit ? "Available" : "Closed";
 
   if (participant.extensionGranted) {
     elements.attemptNote.textContent = "Additional access is active.";
@@ -300,7 +329,7 @@ function renderResults() {
       ? `${formatInteger(state.marketSummary.activeParticipants)} entries`
       : "--";
     elements.resultRank.textContent = "Submit an attempt to see your score.";
-    elements.resultMultiplier.textContent = "Hit-rate multiplier appears after submit";
+    elements.resultMultiplier.textContent = "Higher percentile is better. Speed multiplier appears after submit.";
     elements.resultRange.textContent = "Future field movement estimate";
     elements.resultRefresh.textContent = state.marketSummary?.generatedAt
       ? `Last snapshot: ${formatDate(state.marketSummary.generatedAt)}`
@@ -311,12 +340,15 @@ function renderResults() {
     return;
   }
 
+  const displayedPercentile = attempt.scorePercentile ?? attempt.percentile;
+  const displayedRank = attempt.scoreRank ?? attempt.rank;
+
   elements.resultPnl.textContent = formatPnl(attempt.pnl);
   elements.resultExpected.textContent = formatPnl(attempt.expectedPnl);
-  elements.resultPercentile.textContent = `${attempt.percentile}th`;
+  elements.resultPercentile.textContent = formatPercentile(displayedPercentile);
   elements.resultField.textContent = `${attempt.activeParticipants} entries`;
-  elements.resultRank.textContent = `Private standing: #${attempt.rank} of ${attempt.activeParticipants}`;
-  elements.resultMultiplier.textContent = `Speed multiplier x ${formatDecimal(attempt.speedMultiplier, 4)}`;
+  elements.resultRank.textContent = `Score standing: #${displayedRank} of ${attempt.activeParticipants}`;
+  elements.resultMultiplier.textContent = `Higher percentile is better. Speed multiplier x ${formatDecimal(attempt.speedMultiplier, 4)}`;
   elements.resultRange.textContent = `Expected band ${formatPnl(attempt.lowerBand)} to ${formatPnl(attempt.upperBand)}`;
   elements.resultRefresh.textContent = `Snapshot scored at ${formatDate(attempt.submittedAt)}`;
   elements.scenarioBullish.textContent = formatPnl(attempt.bullishPnl);
@@ -402,7 +434,7 @@ function renderHistoryTable() {
           <td>R ${attempt.researchPct} / S ${attempt.scalePct} / V ${attempt.speedPct}</td>
           <td>${formatPnl(attempt.pnl)}</td>
           <td>${formatPnl(attempt.expectedPnl)}</td>
-          <td>${attempt.percentile}th</td>
+          <td>${formatPercentile(attempt.scorePercentile ?? attempt.percentile)}</td>
           <td><button class="table-action duplicate-attempt" data-attempt="${attempt.attemptNumber}" type="button">Duplicate</button></td>
         </tr>
       `

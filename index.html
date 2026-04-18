@@ -14,7 +14,7 @@
       href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Space+Grotesk:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="/styles.css?v=20260418-2" />
+    <link rel="stylesheet" href="/styles.css?v=20260418-3" />
   </head>
   <body>
     <div class="background-glow background-glow-a"></div>
@@ -115,10 +115,6 @@
                 <span class="forecast-label">Budget Used</span>
                 <strong id="budget-used-label">0%</strong>
               </article>
-              <article class="forecast-card">
-                <span class="forecast-label">Attempts Left</span>
-                <strong id="attempts-left-label">--</strong>
-              </article>
             </div>
 
             <div class="budget-card">
@@ -171,9 +167,9 @@
             </article>
 
             <article class="result-card">
-              <span class="result-label">Speed Percentile</span>
+              <span class="result-label">Score Percentile</span>
               <strong id="result-percentile">--</strong>
-              <span class="result-note" id="result-multiplier">Hit-rate multiplier appears after submit</span>
+              <span class="result-note" id="result-multiplier">Higher percentile is better. Speed multiplier appears after submit.</span>
             </article>
 
             <article class="result-card">
@@ -203,7 +199,7 @@
           <div class="section-head">
             <div>
               <p class="eyebrow">Attempt History</p>
-              <h2 class="section-title">Every submission is logged. Your graph only shows your own PnL.</h2>
+              <h2 class="section-title">Every submission is logged. Higher score percentile means a stronger standing.</h2>
             </div>
           </div>
 
@@ -226,7 +222,7 @@
                   <th>Split</th>
                   <th>PnL</th>
                   <th>Expected</th>
-                  <th>Percentile</th>
+                  <th>Score Percentile</th>
                   <th></th>
                 </tr>
               </thead>
@@ -241,6 +237,6 @@
       </main>
     </div>
 
-    <script type="module" src="/app.js?v=20260418-2"></script>
+    <script type="module" src="/app.js?v=20260418-3"></script>
   </body>
 </html>
