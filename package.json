@@ -5,6 +5,7 @@
   "description": "Anonymous manual strategy tester with a simulated market field.",
   "scripts": {
     "dev": "vercel dev"
-  
+    }
+
 
 }
