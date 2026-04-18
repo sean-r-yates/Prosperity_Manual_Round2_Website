@@ -5,10 +5,6 @@
   "description": "Anonymous manual strategy tester with a simulated market field.",
   "scripts": {
     "dev": "vercel dev"
-    },
-    "dependencies": {
-    "@vercel/analytics": "^2.0.1"
-  }
-
+  },
 
 }
