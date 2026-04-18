@@ -2,9 +2,8 @@
   "name": "signal-outpost",
   "version": "0.1.0",
   "private": true,
-  "description": "Anonymous manual strategy tester with a simulated market field.",
+  "description": "Browser-based allocation scorer for Research, Scale, and Speed.",
   "scripts": {
     "dev": "vercel dev"
-  },
-
+  }
 }
