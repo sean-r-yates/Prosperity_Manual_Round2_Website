@@ -6,7 +6,7 @@
     <title>Signal Outpost</title>
     <meta
       name="description"
-      content="Signal Outpost is a free open manual strategy tester for anonymous market-making allocation experiments."
+      content="Signal Outpost is a browser-based scorer for Research, Scale, and Speed allocations."
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -39,18 +39,16 @@
       <main class="page-grid">
         <section class="panel hero-panel">
           <div class="hero-copy">
-            <p class="eyebrow">Manual Strategy Tester</p>
-            <h2 class="hero-title">Experiment with Research, Scale, and Speed.</h2>
+            <p class="eyebrow">Allocation Scoreboard</p>
+            <h2 class="hero-title">Score Research, Scale, and Speed allocations.</h2>
           </div>
 
           <div class="hero-aside">
             <div class="metric-card">
-              <span class="metric-label">Active Field</span>
+              <span class="metric-label">Current Snapshot</span>
               <strong class="metric-value" id="active-field-count">--</strong>
-              <span class="metric-note">Participants in the current snapshot</span>
+              <span class="metric-note">Entries in the current snapshot</span>
             </div>
-
-        
 
             <div class="metric-card">
               <span class="metric-label">Attempts</span>
@@ -66,7 +64,7 @@
               <p class="eyebrow">Your Investment</p>
               <h2 class="section-title">Allocate the 50,000 XIREC budget across the three pillars.</h2>
             </div>
-            <button class="secondary-button hidden" id="extend-button" type="button">Unlock 5 More Attempts</button>
+            <button class="secondary-button hidden" id="extend-button" type="button">Unlock More Attempts</button>
           </div>
 
           <form id="allocation-form" novalidate>
@@ -140,7 +138,7 @@
             </div>
 
             <div class="form-actions">
-              <button class="primary-button" id="submit-button" type="submit">Run Simulation</button>
+              <button class="primary-button" id="submit-button" type="submit">Check Score</button>
               <p class="form-message" id="form-message"></p>
             </div>
           </form>
@@ -150,7 +148,7 @@
           <div class="section-head">
             <div>
               <p class="eyebrow">Private Results</p>
-              <h2 class="section-title">Only your result is shown. The field underneath is private.</h2>
+              <h2 class="section-title">Your latest result appears here after you submit.</h2>
             </div>
           </div>
 
@@ -158,7 +156,7 @@
             <article class="result-card glow-card">
               <span class="result-label">Current PnL</span>
               <strong id="result-pnl">--</strong>
-              <span class="result-note" id="result-rank">Submit an attempt to score against the current field.</span>
+              <span class="result-note" id="result-rank">Submit an attempt to see your score.</span>
             </article>
 
             <article class="result-card">
@@ -174,9 +172,9 @@
             </article>
 
             <article class="result-card">
-              <span class="result-label">Field Snapshot</span>
+              <span class="result-label">Current Snapshot</span>
               <strong id="result-field">--</strong>
-              <span class="result-note" id="result-refresh">Refreshes on visit after 20 minutes</span>
+              <span class="result-note" id="result-refresh">Latest scoring timestamp appears here</span>
             </article>
           </div>
 

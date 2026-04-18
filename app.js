@@ -4,45 +4,60 @@ const TOTAL_BUDGET = 50_000;
 const RESEARCH_CAP = 200_000;
 const SCALE_CAP = 7;
 
+function getElement(id) {
+  return document.getElementById(id);
+}
+
+function requireElement(id) {
+  const element = getElement(id);
+
+  if (!element) {
+    throw new Error(`Missing required DOM element: #${id}`);
+  }
+
+  return element;
+}
+
 const elements = {
-  activeFieldCount: document.getElementById("active-field-count"),
-  allocationForm: document.getElementById("allocation-form"),
-  attemptCounter: document.getElementById("attempt-counter"),
-  attemptNote: document.getElementById("attempt-note"),
-  attemptsLeftLabel: document.getElementById("attempts-left-label"),
-  budgetFill: document.getElementById("budget-fill"),
-  budgetHelper: document.getElementById("budget-helper"),
-  budgetUsedLabel: document.getElementById("budget-used-label"),
-  budgetUsedNumber: document.getElementById("budget-used-number"),
-  budgetUsedPercent: document.getElementById("budget-used-percent"),
-  extendButton: document.getElementById("extend-button"),
-  formMessage: document.getElementById("form-message"),
-  historyChartWrap: document.getElementById("history-chart-wrap"),
-  historyMeta: document.getElementById("history-meta"),
-  historyTableBody: document.getElementById("history-table-body"),
-  historyTitle: document.getElementById("history-title"),
-  participantExpiry: document.getElementById("participant-expiry"),
-  participantId: document.getElementById("participant-id"),
-  researchAmount: document.getElementById("research-amount"),
-  researchForecast: document.getElementById("research-forecast"),
-  researchInput: document.getElementById("research-input"),
-  resultExpected: document.getElementById("result-expected"),
-  resultField: document.getElementById("result-field"),
-  resultMultiplier: document.getElementById("result-multiplier"),
-  resultPercentile: document.getElementById("result-percentile"),
-  resultPnl: document.getElementById("result-pnl"),
-  resultRange: document.getElementById("result-range"),
-  resultRank: document.getElementById("result-rank"),
-  resultRefresh: document.getElementById("result-refresh"),
-  scaleAmount: document.getElementById("scale-amount"),
-  scaleForecast: document.getElementById("scale-forecast"),
-  scaleInput: document.getElementById("scale-input"),
-  scenarioAdverse: document.getElementById("scenario-adverse"),
-  scenarioBase: document.getElementById("scenario-base"),
-  scenarioBullish: document.getElementById("scenario-bullish"),
-  speedAmount: document.getElementById("speed-amount"),
-  speedInput: document.getElementById("speed-input"),
-  submitButton: document.getElementById("submit-button"),
+  activeFieldCount: requireElement("active-field-count"),
+  allocationForm: requireElement("allocation-form"),
+  attemptCounter: requireElement("attempt-counter"),
+  attemptNote: requireElement("attempt-note"),
+  attemptsLeftLabel: requireElement("attempts-left-label"),
+  budgetFill: requireElement("budget-fill"),
+  budgetHelper: requireElement("budget-helper"),
+  budgetUsedLabel: requireElement("budget-used-label"),
+  budgetUsedNumber: requireElement("budget-used-number"),
+  budgetUsedPercent: requireElement("budget-used-percent"),
+  extendButton: requireElement("extend-button"),
+  formMessage: requireElement("form-message"),
+  historyChartWrap: requireElement("history-chart-wrap"),
+  historyMeta: requireElement("history-meta"),
+  historyTableBody: requireElement("history-table-body"),
+  historyTitle: requireElement("history-title"),
+  investPanel: requireElement("invest-panel"),
+  participantExpiry: getElement("participant-expiry"),
+  participantId: getElement("participant-id"),
+  researchAmount: requireElement("research-amount"),
+  researchForecast: requireElement("research-forecast"),
+  researchInput: requireElement("research-input"),
+  resultExpected: requireElement("result-expected"),
+  resultField: requireElement("result-field"),
+  resultMultiplier: requireElement("result-multiplier"),
+  resultPercentile: requireElement("result-percentile"),
+  resultPnl: requireElement("result-pnl"),
+  resultRange: requireElement("result-range"),
+  resultRank: requireElement("result-rank"),
+  resultRefresh: requireElement("result-refresh"),
+  scaleAmount: requireElement("scale-amount"),
+  scaleForecast: requireElement("scale-forecast"),
+  scaleInput: requireElement("scale-input"),
+  scenarioAdverse: requireElement("scenario-adverse"),
+  scenarioBase: requireElement("scenario-base"),
+  scenarioBullish: requireElement("scenario-bullish"),
+  speedAmount: requireElement("speed-amount"),
+  speedInput: requireElement("speed-input"),
+  submitButton: requireElement("submit-button"),
 };
 
 const state = {
@@ -129,7 +144,7 @@ function getOrCreateIdentity(forceReset = false) {
         return parsed;
       }
     } catch (error) {
-      console.warn("Unable to parse saved participant identity.", error);
+      console.warn("Unable to parse saved session data.", error);
     }
   }
 
@@ -236,31 +251,37 @@ function renderPreview() {
 function renderIdentity() {
   const identity = state.participantIdentity;
   const participant = state.participant;
-  elements.participantId.textContent = identity?.id || "--";
-  elements.participantExpiry.textContent = identity
-    ? `ID auto-refreshes in ${timeUntilExpiry(identity.expiresAt)}`
-    : "ID refreshes after 3 days";
+
+  if (elements.participantId) {
+    elements.participantId.textContent = identity?.id || "--";
+  }
+
+  if (elements.participantExpiry) {
+    elements.participantExpiry.textContent = identity
+      ? `Session refreshes in ${timeUntilExpiry(identity.expiresAt)}`
+      : "Session refreshes automatically";
+  }
 
   if (!participant) {
     elements.attemptCounter.textContent = "--";
-    elements.attemptsLeftLabel.textContent = "--";
+    elements.attemptsLeftLabel.textContent = "Available";
     return;
   }
 
-  elements.attemptCounter.textContent = `${participant.attemptCount} / ${participant.maxAttempts}`;
-  elements.attemptsLeftLabel.textContent = formatInteger(participant.attemptsRemaining);
+  elements.attemptCounter.textContent = formatInteger(participant.attemptCount);
+  elements.attemptsLeftLabel.textContent = participant.canSubmit ? "Available" : "Closed";
 
   if (participant.extensionGranted) {
-    elements.attemptNote.textContent = `Extension active. ${participant.extensionRemaining} extra attempts remain.`;
+    elements.attemptNote.textContent = "Additional access is active.";
   } else if (participant.extensionOffered) {
-    elements.attemptNote.textContent = "Base attempts are used. You can unlock 5 more.";
+    elements.attemptNote.textContent = "Additional access is available.";
   } else {
-    elements.attemptNote.textContent = "Tracked privately per browser";
+    elements.attemptNote.textContent = "Saved privately in this browser";
   }
 
   elements.extendButton.classList.toggle("hidden", !participant.extensionOffered);
   elements.submitButton.disabled = !participant.canSubmit;
-  elements.submitButton.textContent = participant.canSubmit ? "Run Simulation" : "Attempts Exhausted";
+  elements.submitButton.textContent = participant.canSubmit ? "Check Score" : "Submissions Closed";
 }
 
 function renderMarketSummary() {
@@ -276,14 +297,14 @@ function renderResults() {
     elements.resultExpected.textContent = "--";
     elements.resultPercentile.textContent = "--";
     elements.resultField.textContent = state.marketSummary
-      ? `${formatInteger(state.marketSummary.activeParticipants)} participants`
+      ? `${formatInteger(state.marketSummary.activeParticipants)} entries`
       : "--";
-    elements.resultRank.textContent = "Submit an attempt to score against the current field.";
+    elements.resultRank.textContent = "Submit an attempt to see your score.";
     elements.resultMultiplier.textContent = "Hit-rate multiplier appears after submit";
     elements.resultRange.textContent = "Future field movement estimate";
     elements.resultRefresh.textContent = state.marketSummary?.generatedAt
       ? `Last snapshot: ${formatDate(state.marketSummary.generatedAt)}`
-      : "Refreshes on visit after 20 minutes";
+      : "Latest scoring timestamp appears here";
     elements.scenarioBullish.textContent = "--";
     elements.scenarioBase.textContent = "--";
     elements.scenarioAdverse.textContent = "--";
@@ -293,8 +314,8 @@ function renderResults() {
   elements.resultPnl.textContent = formatPnl(attempt.pnl);
   elements.resultExpected.textContent = formatPnl(attempt.expectedPnl);
   elements.resultPercentile.textContent = `${attempt.percentile}th`;
-  elements.resultField.textContent = `${attempt.activeParticipants} participants`;
-  elements.resultRank.textContent = `Private rank: #${attempt.rank} of ${attempt.activeParticipants}`;
+  elements.resultField.textContent = `${attempt.activeParticipants} entries`;
+  elements.resultRank.textContent = `Private standing: #${attempt.rank} of ${attempt.activeParticipants}`;
   elements.resultMultiplier.textContent = `Speed multiplier x ${formatDecimal(attempt.speedMultiplier, 4)}`;
   elements.resultRange.textContent = `Expected band ${formatPnl(attempt.lowerBand)} to ${formatPnl(attempt.upperBand)}`;
   elements.resultRefresh.textContent = `Snapshot scored at ${formatDate(attempt.submittedAt)}`;
@@ -452,7 +473,7 @@ async function handleSubmit(event) {
 
   try {
     elements.submitButton.disabled = true;
-    setFormMessage("Running the field simulation...");
+    setFormMessage("Scoring your submission...");
 
     const allocation = readCurrentAllocation();
     const payload = await apiRequest("/api/submit", {
@@ -466,12 +487,12 @@ async function handleSubmit(event) {
     if (payload.resetRequired) {
       state.participantIdentity = getOrCreateIdentity(true);
       await bootstrap();
-      setFormMessage("Your 3-day ID expired, so a fresh anonymous ID was created.", "success");
+      setFormMessage("Your session refreshed automatically.", "success");
       return;
     }
 
     hydrateState(payload);
-    setFormMessage("Attempt logged and scored against the current field.", "success");
+    setFormMessage("Submission saved and scored.", "success");
   } catch (error) {
     setFormMessage(error.message, "error");
   } finally {
@@ -484,7 +505,7 @@ async function handleSubmit(event) {
 async function handleExtension() {
   try {
     elements.extendButton.disabled = true;
-    setFormMessage("Unlocking 5 more attempts...");
+    setFormMessage("Unlocking additional access...");
 
     const payload = await apiRequest("/api/extend", {
       body: JSON.stringify({
@@ -496,7 +517,7 @@ async function handleExtension() {
     if (payload.resetRequired) {
       state.participantIdentity = getOrCreateIdentity(true);
       await bootstrap();
-      setFormMessage("Your 3-day ID expired, so a fresh anonymous ID was created.", "success");
+      setFormMessage("Your session refreshed automatically.", "success");
       return;
     }
 
@@ -504,7 +525,7 @@ async function handleExtension() {
       ...payload,
       marketSummary: state.marketSummary,
     });
-    setFormMessage("Five extra attempts unlocked for this participant.", "success");
+    setFormMessage("Additional attempts unlocked.", "success");
   } catch (error) {
     setFormMessage(error.message, "error");
   } finally {
@@ -522,7 +543,7 @@ function populateAttempt(attemptNumber) {
   elements.scaleInput.value = String(match.scalePct);
   elements.speedInput.value = String(match.speedPct);
   renderPreview();
-  document.getElementById("invest-panel").scrollIntoView({ behavior: "smooth", block: "start" });
+  elements.investPanel.scrollIntoView({ behavior: "smooth", block: "start" });
   setFormMessage(`Attempt #${attemptNumber} copied into the form.`, "success");
 }
 

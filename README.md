@@ -1,17 +1,13 @@
 # Signal Outpost
 
-Signal Outpost is a single-page strategy sandbox inspired by a manual trading challenge format. It gives each browser an anonymous participant ID, limits attempts, logs every real attempt, mixes real behaviour into a fake market field, and exposes a password-protected admin surface with CSV export.
+Signal Outpost is a browser-based allocation scorer built around Research, Scale, and Speed inputs. It keeps submissions tied to a browser-scoped session, tracks result history, and includes a password-protected admin surface with CSV export.
 
 ## What It Includes
 
 - One public single-page web app with inspired sci-fi styling
-- Anonymous participant IDs that expire after 3 days
-- Exact Research, Scale, and rank-based Speed math from the challenge prompt
-- 20 base attempts plus an optional 5-attempt extension
-- Real attempt logging only
-- Fake market state that refreshes on visit after 20 minutes
-- Private per-user results with percentile, rank, expected return, and bullish/base/adverse scenarios
-- Personal PnL history graph and duplicate-from-history workflow
+- Browser-scoped sessions that refresh automatically over time
+- Research, Scale, and Speed scoring with private result views
+- Submission history with charting and duplicate-from-history workflow
 - Password-protected admin view with histograms and CSV export
 
 ## Storage Choice
@@ -38,7 +34,7 @@ Because the app is built as static pages plus serverless API functions, no frame
 
 ## Data Notes
 
-- Real attempts are stored with anonymous participant IDs and allocation/output fields only.
-- The mixed market uses current fake participants plus a deterministic half-sample of latest real submissions.
-- Fake data is never written into the real-attempt CSV.
+- Real attempts are stored with session identifiers plus allocation and output fields.
+- The scoring reference layer combines generated entries with a deterministic sample of recent real submissions.
+- Generated reference data is never written into the real-attempt CSV.
 
