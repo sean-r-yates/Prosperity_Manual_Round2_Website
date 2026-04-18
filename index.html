@@ -15,6 +15,10 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="/styles.css" />
+    <script>
+      window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+    </script>
+    <script defer src="/_vercel/insights/script.js"></script>
   </head>
   <body>
     <div class="background-glow background-glow-a"></div>
@@ -31,7 +35,7 @@
         </div>
 
         <div class="topbar-actions">
-          <div class="top-pill">Single-player sandbox with a simulated field</div>
+          
           <a class="ghost-link" href="/admin">Admin</a>
         </div>
       </header>
@@ -41,15 +45,6 @@
           <div class="hero-copy">
             <p class="eyebrow">Manual Strategy Tester</p>
             <h2 class="hero-title">Experiment with Research, Scale, and Speed.</h2>
-            <p class="hero-text">
-              Use an anonymous participant ID, test manual allocations, and see how your own score changes as a
-              Simulated field drifts over time.
-            </p>
-            <div class="hero-badges">
-              <span class="inline-badge">Exact challenge math</span>
-              <span class="inline-badge">20 attempts + optional 5</span>
-              <span class="inline-badge">20 minute field refresh on visit</span>
-            </div>
           </div>
 
           <div class="hero-aside">
@@ -59,11 +54,7 @@
               <span class="metric-note">Participants in the current snapshot</span>
             </div>
 
-            <div class="metric-card">
-              <span class="metric-label">Participant ID</span>
-              <strong class="metric-value metric-id" id="participant-id">--</strong>
-              <span class="metric-note" id="participant-expiry">ID refreshes after 3 days</span>
-            </div>
+        
 
             <div class="metric-card">
               <span class="metric-label">Attempts</span>
